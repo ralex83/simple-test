@@ -15,7 +15,7 @@ pipeline {
             // Отправка в S3
             sh '''
                 if [ -f report.html ]; then
-                  aws s3 cp report.html s3://jenkins-html-reports-ralex/report.html
+                  aws s3 cp report.html s3://jenkins-html-report-ralex/report.html
                 fi
             '''
         }
