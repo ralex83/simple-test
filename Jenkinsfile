@@ -9,14 +9,18 @@ pipeline {
     stages {
         stage('Prepare Environment') {
             steps {
-                sh 'python3 -m venv ci-cd-env'
-                sh 'bash -c "source ci-cd-env/bin/activate && pip install -r requirements.txt"'
+                sh '''
+                    python3 -m venv ci-cd-env
+                    bash -c "source ci-cd-env/bin/activate && pip install -r requirements.txt"
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'bash -c "source ci-cd-env/bin/activate && pytest --html=report.html"'
+                sh '''
+                    bash -c "source ci-cd-env/bin/activate && pytest --html=report.html"
+                '''
             }
         }
     }
@@ -24,7 +28,12 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'report.html', fingerprint: true
-            sh 'bash -c "[ -f report.html ] && aws s3 cp report.html s3://jenkins-html-report-ralex/report.html"'
+            sh '''
+                if [ -f report.html ]; then
+                    DATE=$(date +%Y-%m-%d_%H-%M-%S)
+                    aws s3 cp report.html s3://jenkins-html-report-ralex/report_$DATE.html
+                fi
+            '''
         }
     }
 }
