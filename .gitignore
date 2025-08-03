@@ -1,1 +1,5 @@
 .env
+.env
+venv/
+report.html
+acess_token_git.txt
