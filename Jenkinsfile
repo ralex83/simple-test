@@ -30,6 +30,10 @@ pipeline {
             archiveArtifacts artifacts: 'report.html', fingerprint: true
             sh '''
                 if [ -f report.html ]; then
+                    echo "Parsing report with GPT..."
+                    source ci-cd-env/bin/activate
+                    python3 gpt_log_parser.py
+
                     DATE=$(date +%Y-%m-%d_%H-%M-%S)
                     aws s3 cp report.html s3://jenkins-html-report-ralex/report_$DATE.html
                 fi
