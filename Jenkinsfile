@@ -1,12 +1,15 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_SHARED_CREDENTIALS_FILE = '/home/jenkins/.aws/credentials'
+        AWS_CONFIG_FILE = '/home/jenkins/.aws/config'
+    }
+
     stages {
         stage('Prepare Environment') {
             steps {
-                sh '''
-                    python3 -m venv ci-cd-env
-                '''
+                sh 'python3 -m venv ci-cd-env'
                 sh 'bash -c "source ci-cd-env/bin/activate && pip install -r requirements.txt"'
             }
         }
