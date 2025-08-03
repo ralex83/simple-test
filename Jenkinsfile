@@ -19,7 +19,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                    bash -c "source ci-cd-env/bin/activate && pytest --html=report.html --self-contained-html"
+                    bash -c ". ci-cd-env/bin/activate && pytest --html=report.html --self-contained-html | tee pytest.log"
                 '''
             }
         }
