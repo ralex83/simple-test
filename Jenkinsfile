@@ -33,7 +33,7 @@ pipeline {
 
                 if [ -f report.html ]; then
                     echo "Parsing report with GPT..."
-                    source ci-cd-env/bin/activate
+                    . ci-cd-env/bin/activate
                     python3 gpt_log_parser.py
 
                     DATE=$(date +%Y-%m-%d_%H-%M-%S)
