@@ -6,19 +6,14 @@ pipeline {
             steps {
                 sh '''
                     python3 -m venv ci-cd-env
-                    source ci-cd-env/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
                 '''
+                sh 'bash -c "source ci-cd-env/bin/activate && pip install -r requirements.txt"'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                sh '''
-                    source ci-cd-env/bin/activate
-                    pytest --html=report.html
-                '''
+                sh 'bash -c "source ci-cd-env/bin/activate && pytest --html=report.html"'
             }
         }
     }
@@ -26,13 +21,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'report.html', fingerprint: true
-            sh '''
-                if [ -f report.html ]; then
-                  aws s3 cp report.html s3://jenkins-html-report-ralex/report.html
-                fi
-            '''
+            sh 'bash -c "[ -f report.html ] && aws s3 cp report.html s3://jenkins-html-report-ralex/report.html"'
         }
     }
 }
-
-
